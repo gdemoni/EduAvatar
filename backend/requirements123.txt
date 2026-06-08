@@ -1,0 +1,20 @@
+# Python >= 3.11, < 4.0
+langgraph>=1.0.0
+langchain>=0.2.14
+langchain-community>=0.2.0
+langchain-openai>=0.1.22
+langchain-tavily>=0.1
+python-dotenv>=1.0.1
+
+langchain-text-splitters>=0.2.0
+langchain-huggingface>=0.1.0
+sentence-transformers>=2.6.0
+faiss-cpu>=1.7.4
+
+pypdf>=4.0.0
+docx2txt>=0.8
+unstructured
+
+
+#pip uninstall fireworks-ai
+#pip install -U "protobuf>=6.32.1,<7"

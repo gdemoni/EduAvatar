@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 智能助教 - 课后答疑与教辅制作平台</title>
+    <!-- 引入字体图标库 (使用 SVG 代替或 CDN) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2563eb; /* 科技蓝 */
+            --primary-hover: #1d4ed8;
+            --secondary-bg: #f8fafc; /* 浅灰背景 */
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-sub: #64748b;
+            --danger-color: #ef4444;
+            --success-color: #10b981;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --radius-md: 12px;
+            --radius-lg: 20px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--secondary-bg);
+            color: var(--text-main);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* 顶部导航栏 */
+        header {
+            height: 64px;
+            background: var(--card-bg);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            box-shadow: var(--shadow-sm);
+            z-index: 10;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--primary-color);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .brand-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        /* 主体布局 */
+        main {
+            flex: 1;
+            display: flex;
+            padding: 24px;
+            gap: 24px;
+            max-width: 1600px;
+            margin: 0 auto;
+            width: 100%;
+            height: calc(100vh - 64px);
+        }
+
+        /* 左侧：视频显示区 */
+        .preview-area {
+            flex: 2;
+            display: flex;
+            flex-direction: column;
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            box-shadow: var(--shadow-md);
+            position: relative;
+        }
+
+        .video-wrapper {
+            flex: 1;
+            background: #000;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* 加载动画 */
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 5;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading-dots {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+
+        .dot:nth-child(1) { animation-delay: -0.32s; }
+        .dot:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+
+        .loading-text {
+            font-size: 0.9rem;
+            color: var(--text-sub);
+            font-weight: 500;
+        }
+
+        /* 视频底部控制条 */
+        .video-controls {
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 16px;
+            padding: 0 8px;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            background: #f1f5f9;
+            font-size: 0.85rem;
+            color: var(--text-sub);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #cbd5e1;
+        }
+
+        .status-dot.active {
+            background: var(--success-color);
+            box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+        }
+
+        .record-controls {
+            display: flex;
+            gap: 12px;
+        }
+
+        /* 右侧：交互与设置区 */
+        .interaction-area {
+            flex: 1;
+            min-width: 360px;
+            max-width: 450px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* 卡片通用样式 */
+        .panel-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            box-shadow: var(--shadow-md);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-header {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-main);
+        }
+
+        /* 快捷设置卡片 */
+        .settings-card {
+            flex: 0 0 auto;
+        }
+
+        .setting-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+        }
+
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #cbd5e1;
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider { background-color: var(--primary-color); }
+        input:checked + .slider:before { transform: translateX(20px); }
+
+        /* 提问/脚本输入区 */
+        .input-card {
+            flex: 1;
+            position: relative;
+        }
+
+        .chat-input-wrapper {
+            flex: 1;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: var(--radius-md);
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.2s;
+        }
+
+        .chat-input-wrapper:focus-within {
+            border-color: var(--primary-color);
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        textarea#message {
+            flex: 1;
+            border: none;
+            background: transparent;
+            resize: none;
+            outline: none;
+            font-size: 1rem;
+            line-height: 1.6;
+            color: var(--text-main);
+        }
+
+        .input-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #f1f5f9;
+        }
+
+        .hint-text {
+            font-size: 0.8rem;
+            color: var(--text-sub);
+        }
+
+        /* 按钮组件 */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+            box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #e2e8f0;
+            color: var(--text-main);
+        }
+
+        .btn-outline:hover {
+            background: #f8fafc;
+            border-color: #cbd5e1;
+        }
+
+        .btn-record {
+            background: #fef2f2;
+            color: var(--danger-color);
+            border: 1px solid #fee2e2;
+        }
+
+        .btn-record:hover {
+            background: #fee2e2;
+        }
+
+        .btn-record.recording {
+            background: var(--danger-color);
+            color: white;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* 隐藏原生音频 */
+        #audio { display: none; }
+
+        /* 响应式调整 */
+        @media (max-width: 1024px) {
+            main { flex-direction: column; height: auto; overflow-y: auto; }
+            .preview-area { height: 60vh; }
+            .interaction-area { min-width: 100%; max-width: 100%; height: 500px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="brand">
+            <div class="brand-icon">AI</div>
+            <div class="brand-text">智能助教工作台</div>
+        </div>
+        <div class="header-controls">
+            <div class="status-badge">
+                <div class="status-dot" id="connection-dot"></div>
+                <span id="connection-status">Ready to Connect</span>
+            </div>
+            <button id="start" onclick="start()" class="btn btn-primary">
+                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                连接数字人
+            </button>
+            <button id="stop" onclick="stop()" class="btn btn-outline" style="display: none;">断开连接</button>
+        </div>
+    </header>
+
+    <main>
+        <!-- 左侧视频区 -->
+        <section class="preview-area">
+            <div class="video-wrapper">
+                <div class="loading-overlay" id="loadingOverlay">
+                    <div class="loading-dots">
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                    </div>
+                    <div class="loading-text">等待连接助教...</div>
+                </div>
+                <video id="video" autoplay playsinline></video>
+                <audio id="audio" autoplay></audio>
+            </div>
+            
+            <div class="video-controls">
+                <div class="info">
+                    <span style="font-size: 0.9rem; font-weight: 600;">实时预览</span>
+                    <span style="font-size: 0.8rem; color: #64748b; margin-left: 8px;">Session ID: <span id="session-display">0</span></span>
+                </div>
+                <div class="record-controls">
+                    <button class="btn btn-record" id="btn_start_record">
+                        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                        </svg>
+                        开始录制素材
+                    </button>
+                    <button class="btn btn-outline" id="btn_stop_record" disabled>
+                        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 10a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z" />
+                        </svg>
+                        停止录制
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 右侧交互区 -->
+        <section class="interaction-area">
+            
+            <!-- 设置卡片 -->
+            <div class="panel-card settings-card">
+                <div class="card-header">
+                    <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+                    </svg>
+                    连接设置
+                </div>
+                <!-- 隐藏的 input 用于保留逻辑 -->
+                <input type="hidden" id="use-stun" checked>
+                <input type="hidden" id="sessionid" value="0">
+            </div>
+
+            <!-- 输入卡片 -->
+            <div class="panel-card input-card">
+                <div class="card-header">
+                    <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                    </svg>
+                    内容输入
+                </div>
+                <form id="echo-form" style="display: flex; flex-direction: column; height: 100%;">
+                    <div class="chat-input-wrapper">
+                        <textarea id="message" placeholder="请输入您的问题，或输入需要助教讲解的课件内容..."></textarea>
+                        <div class="input-footer">
+                            <span class="hint-text">按 Enter 发送，Shift + Enter 换行</span>
+                            <button type="submit" class="btn btn-primary" style="padding: 8px 16px;">
+                                发送内容
+                                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <!-- 逻辑脚本 -->
+    <script src="client.js"></script>
+    <script type="text/javascript" src="http://cdn.sockjs.org/sockjs-0.3.4.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+
+    <script type="text/javascript" charset="utf-8">
+        // 界面状态逻辑
+        const video = document.getElementById('video');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        const loadingText = document.querySelector('.loading-text');
+        const connectionDot = document.getElementById('connection-dot');
+        const connectionStatus = document.getElementById('connection-status');
+        const startBtn = document.getElementById('start');
+        const stopBtn = document.getElementById('stop');
+
+        // 监听视频播放，隐藏 Loading
+        video.addEventListener('playing', () => {
+            loadingOverlay.style.opacity = '0';
+            setTimeout(() => loadingOverlay.style.display = 'none', 500);
+            updateStatus(true);
+        });
+
+        // 覆盖原本的 start/stop 按钮逻辑以更新 UI
+        const originalStart = window.start; // 假设 client.js 里有 start()
+        window.start = function() {
+            loadingOverlay.style.display = 'flex';
+            loadingOverlay.style.opacity = '1';
+            loadingText.innerText = "正在建立神经连接...";
+            if (typeof originalStart === 'function') originalStart();
+            
+            startBtn.style.display = 'none';
+            stopBtn.style.display = 'inline-flex';
+        };
+
+        const originalStop = window.stop;
+        window.stop = function() {
+            if (typeof originalStop === 'function') originalStop();
+            updateStatus(false);
+            loadingOverlay.style.display = 'flex';
+            loadingOverlay.style.opacity = '1';
+            loadingText.innerText = "连接已断开";
+            
+            startBtn.style.display = 'inline-flex';
+            stopBtn.style.display = 'none';
+        };
+
+        function updateStatus(isConnected) {
+            if (isConnected) {
+                connectionDot.classList.add('active');
+                connectionStatus.innerText = "AI 助教在线";
+                connectionStatus.style.color = "var(--text-main)";
+            } else {
+                connectionDot.classList.remove('active');
+                connectionStatus.innerText = "离线";
+                connectionStatus.style.color = "var(--text-sub)";
+            }
+        }
+
+        // 文本框自适应
+        const tx = document.getElementById('message');
+        tx.addEventListener("input", function() {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+        }, false);
+        
+        // 回车发送
+        tx.addEventListener("keydown", function(e) {
+            if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                $('#echo-form').submit();
+            }
+        });
+
+        // 同步 Session ID
+        setInterval(() => {
+            const sid = document.getElementById('sessionid').value;
+            document.getElementById('session-display').innerText = sid;
+        }, 1000);
+
+        // ---------------------------------------------------------
+        // 核心业务逻辑 (保持不变)
+        // ---------------------------------------------------------
+        $(document).ready(function() {
+            $('#echo-form').on('submit', function(e) {
+                e.preventDefault();
+                var message = $('#message').val();
+                if(!message.trim()) return;
+
+                console.log('Sending: ' + message);
+                
+                fetch('/human', {
+                    body: JSON.stringify({
+                        text: message,
+                        type: 'echo',
+                        interrupt: true,
+                        sessionid:parseInt(document.getElementById('sessionid').value),
+                    }),
+                    headers: { 'Content-Type': 'application/json' },
+                    method: 'POST'
+                });
+                $('#message').val('');
+                $('#message').css('height', 'auto');
+            });
+
+            // 录制按钮逻辑优化
+            $('#btn_start_record').click(function() {
+                const btn = $(this);
+                btn.prop('disabled', true).text('启动中...');
+                
+                fetch('/record', {
+                    body: JSON.stringify({
+                        type: 'start_record',
+                        sessionid:parseInt(document.getElementById('sessionid').value),
+                    }),
+                    headers: { 'Content-Type': 'application/json' },
+                    method: 'POST'
+                }).then(function(response) {
+                    if (response.ok) {
+                        btn.addClass('recording').html('<span class="dot" style="background:#fff;width:8px;height:8px;display:inline-block;border-radius:50%;"></span> 录制中...');
+                        $('#btn_stop_record').prop('disabled', false);
+                    } else {
+                        btn.prop('disabled', false).text('开始录制素材');
+                    }
+                });
+            });
+
+            $('#btn_stop_record').click(function() {
+                const btnStart = $('#btn_start_record');
+                const btnStop = $(this);
+                
+                fetch('/record', {
+                    body: JSON.stringify({
+                        type: 'end_record',
+                        sessionid:parseInt(document.getElementById('sessionid').value),
+                    }),
+                    headers: { 'Content-Type': 'application/json' },
+                    method: 'POST'
+                }).then(function(response) {
+                    if (response.ok) {
+                        btnStart.removeClass('recording').prop('disabled', false).html('<svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg> 开始录制素材');
+                        btnStop.prop('disabled', true);
+                        alert('素材录制完成，已保存到后台。');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

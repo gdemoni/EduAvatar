@@ -1,0 +1,51 @@
+# Core Utilities
+torch-ema
+ninja
+trimesh
+opencv-python>=4.8.0
+tensorboardX
+numpy>=1.24.0,<2.0.0
+pandas>=2.0.0
+tqdm
+matplotlib>=3.7.0
+PyMCubes
+rich
+dearpygui
+packaging
+scipy>=1.10.0
+scikit-learn>=1.3.0
+
+# Audio & Speech
+face_alignment
+python_speech_features
+numba>=0.57.0  # Required for Python 3.11
+resampy>=0.4.0
+pyaudio
+soundfile==0.12.1
+einops
+configargparse
+librosa>=0.10.0
+
+# Image & Video
+lpips==0.1.3
+imageio-ffmpeg
+ffmpeg-python
+opencv-python-headless>=4.8.0
+
+# Deep Learning & Models
+transformers>=4.46.2
+diffusers>=0.24.0
+accelerate>=0.24.0
+omegaconf
+
+# Web & API
+flask
+flask_sockets
+aiortc
+aiohttp_cors
+edge_tts
+openai
+websockets>=12.0
+gradio_client
+azure-cognitiveservices-speech
+cozepy

@@ -1,0 +1,51 @@
+# === 比赛文件 & 敏感信息 ===
+比赛文件/
+.obsidian/
+md文档/
+
+# === 环境变量（含 API Key 等敏感信息） ===
+.env
+.env.*
+!.env.example
+
+# === IDE 配置 ===
+.idea/
+
+# === Python ===
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+.eggs/
+dist/
+build/
+*.egg
+
+# === 虚拟环境 ===
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# === LangGraph 运行时 ===
+.langgraph_api/
+
+# === 日志 ===
+*.log
+
+# === 缓存 ===
+.cache/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# === 数字人分身数据（含大量图片帧，体积过大） ===
+fronted/LiveTalking-main/data/avatars/
+
+
+# === 临时文件 ===
+*.tmp
+*.temp

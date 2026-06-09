@@ -45,6 +45,13 @@ venv.bak/
 # === 数字人分身数据（含大量图片帧，体积过大） ===
 fronted/LiveTalking-main/data/avatars/
 
+# === 课程资料 & 知识库索引（体积大，本地维护） ===
+data/*
+faiss_store/*
+
+# 保留示例文件以维持目录结构
+!data/.gitkeep
+!faiss_store/.gitkeep
 
 # === 临时文件 ===
 *.tmp

@@ -46,11 +46,11 @@ venv.bak/
 fronted/LiveTalking-main/data/avatars/
 
 # === 课程资料 & 知识库索引（体积大，本地维护） ===
-data/*
+data/《上海某高校毕业生就业创业扶持政策实施细则》.txt
+data/《数据结构》课程主要内容.pdf
 faiss_store/*
 
 # 保留示例文件以维持目录结构
-!data/.gitkeep
 !faiss_store/.gitkeep
 
 # === 临时文件 ===

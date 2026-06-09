@@ -1,0 +1,10 @@
+本目录存放 FAISS 向量知识库索引文件，由 rag_faiss_build.py 自动生成。
+
+生成的文件：
+- index.faiss  向量索引（二进制）
+- index.pkl    文档元数据
+
+构建命令：
+  cd rag && python rag_faiss_build.py --source_dir ../data --index_dir ../faiss_store
+
+⚠️ 这些文件体积较大（取决于资料量），已加入 .gitignore，本地维护即可。

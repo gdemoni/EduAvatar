@@ -1,0 +1,9 @@
+本目录用于存放课程资料，支持以下格式：
+- .txt  纯文本
+- .pdf  PDF文档
+- .docx Word文档
+- .doc  旧版Word文档
+
+示例用法：
+  将《数据结构》课件 PDF 放入此目录，然后运行：
+  cd rag && python rag_faiss_build.py --source_dir ../data --index_dir ../faiss_store

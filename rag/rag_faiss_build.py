@@ -63,20 +63,27 @@ def build_vectorstore(
     chunk_size: int,
     chunk_overlap: int,
     model_name: str,):
+    print(f"[1/4] 加载文档: {source_dir}")
     documents = load_documents(source_dir, glob_pattern)
+    print(f"      共加载 {len(documents)} 个文档")
 
+    print(f"[2/4] 文本切分 (chunk_size={chunk_size}, overlap={chunk_overlap})")
     splitter = RecursiveCharacterTextSplitter(
         separators=["\n\n", "\n", "。", "！", "？", "，", " ", ""],
         chunk_size=chunk_size,
         chunk_overlap=chunk_overlap,
     )
     chunks = splitter.split_documents(documents)
+    print(f"      共生成 {len(chunks)} 个文本片段")
 
+    print(f"[3/4] 向量化 (模型: {model_name})")
     embeddings = HuggingFaceEmbeddings(model_name=model_name)
     vectorstore = FAISS.from_documents(chunks, embeddings)
 
+    print(f"[4/4] 保存索引到 {index_dir}")
     index_dir.mkdir(parents=True, exist_ok=True)
     vectorstore.save_local(str(index_dir))
+    print(f"      知识库构建完成！")
 
 def main():
     parser = argparse.ArgumentParser()

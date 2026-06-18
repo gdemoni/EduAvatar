@@ -2,7 +2,20 @@
 
 > 基于 RAG + LangGraph + Wav2Lip 的多模态 AI 智能助教数字人
 
----
+----------------------------------------------------------------
+<div align="center">
+
+[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Python 3.11](https://img.shields.io/badge/Python-3.11-blue.svg)](https://www.python.org/)
+[![PyTorch 2.5.0](https://img.shields.io/badge/PyTorch-2.5.0-orange.svg)](https://pytorch.org/)
+[![LangGraph](https://img.shields.io/badge/LangGraph-Agent-yellow.svg)](https://www.langchain.com/langgraph)
+[![LangChain](https://img.shields.io/badge/LangChain-LLM%20Framework-emerald.svg)](https://www.langchain.com/)
+[![FAISS](https://img.shields.io/badge/VectorDB-FAISS-brown.svg)](https://github.com/facebookresearch/faiss)
+[![BGE Embedding](https://img.shields.io/badge/Embedding-BGE%20small%20zh-red.svg)](https://huggingface.co/BAAI/bge-small-zh-v1.5)
+[![Wav2Lip](https://img.shields.io/badge/DigitalHuman-Wav2Lip%2FMuseTalk-pink.svg)]()
+[![WebRTC](https://img.shields.io/badge/Stream-WebRTC-darkblue.svg)]()
+
+</div>
 
 ## 项目简介
 

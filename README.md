@@ -12,8 +12,6 @@
 [![LangChain](https://img.shields.io/badge/LangChain-LLM%20Framework-emerald.svg)](https://www.langchain.com/)
 [![FAISS](https://img.shields.io/badge/VectorDB-FAISS-brown.svg)](https://github.com/facebookresearch/faiss)
 [![BGE Embedding](https://img.shields.io/badge/Embedding-BGE%20small%20zh-red.svg)](https://huggingface.co/BAAI/bge-small-zh-v1.5)
-[![Wav2Lip](https://img.shields.io/badge/DigitalHuman-Wav2Lip%2FMuseTalk-pink.svg)]()
-[![WebRTC](https://img.shields.io/badge/Stream-WebRTC-darkblue.svg)]()
 
 </div>
 

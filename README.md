@@ -169,6 +169,6 @@ python app.py --model wav2lip --avatar_id wav2lip256_avatar1
 | [Wav2Lip](https://github.com/Rudrabha/Wav2Lip) | 唇形同步模型 |
 | [BGE](https://huggingface.co/BAAI/bge-small-zh-v1.5) | 中文嵌入模型 |
 
----
+-----------
 
 > 📌 **完整教程与源码**：[github.com/gdemoni/EduAvatar](https://github.com/gdemoni/EduAvatar)

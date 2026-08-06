@@ -1,6 +1,6 @@
 ---
 name: ISSUE_TEMPLATE
-about: Describe this issue template's purpose here.
+about: 用于提出issue
 title: ''
 labels: ''
 assignees: gdemoni

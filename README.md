@@ -172,3 +172,15 @@ python app.py --model wav2lip --avatar_id wav2lip256_avatar1
 -----------
 
 > 📌 **完整教程与源码**：[github.com/gdemoni/EduAvatar](https://github.com/gdemoni/EduAvatar)
+
+
+
+
+
+
+
+
+
+
+
+
